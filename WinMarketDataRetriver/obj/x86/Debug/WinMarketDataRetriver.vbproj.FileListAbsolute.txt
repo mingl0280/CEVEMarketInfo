@@ -1,0 +1,11 @@
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\bin\Debug\WinMarketDataRetriver.exe.config
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\bin\Debug\WinMarketDataRetriver.exe
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\bin\Debug\WinMarketDataRetriver.pdb
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\bin\Debug\WinMarketDataRetriver.xml
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Debug\WinMarketDataRetriver.Form1.resources
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Debug\WinMarketDataRetriver.Resources.resources
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Debug\WinMarketDataRetriver.PlaceSelection.resources
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Debug\WinMarketDataRetriver.vbproj.GenerateResource.Cache
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Debug\WinMarketDataRetriver.exe
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Debug\WinMarketDataRetriver.xml
+D:\VS2010\VC++\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Debug\WinMarketDataRetriver.pdb
