@@ -19,6 +19,7 @@ End Structure
 Module funs
     Public sz, xz, ss, syst, systname, spst, szname, xzname, ssname, spstname As String
     Public desc As String
+    Public FZRetstr As String = ""
     Private Function sdlz()
         Return 1
     End Function
@@ -91,52 +92,52 @@ Module funs
     End Function
 
     Public Function checkvalue(ByVal name As String, ByVal type As Integer, Optional ByVal szname As String = "noszname") As String
-
         Dim conn As OleDbConnection
-        Dim cmdEx As OleDbCommand
-        Dim line1 As String = ""
-        Dim line2 As String = ""
-
         conn = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
-        Dim cmdA As String = "select typeID from 物品列表 where 物品名称='" & name & "'"
-        Dim cmdB As String = "select 星域ID from 星域列表 where 星域名称='" & name & "'"
-        Dim cmdC As String = "select 星座ID from 星座列表 where 星座名称='" & name & "'"
-        Dim cmdD As String = "select 星域名称 from 星系列表 where 星系名称='" & name & "'"
-        Dim cmdE As String = "select 星系ID from 星系列表 where 星系名称='" & name & "'"
-        Dim cmdF As String = "select 物品名称 from 物品列表 where typeID='" & name & "'"
-        conn.Open()
-        Select Case type
-            Case 1
-                cmdEx = New OleDbCommand(cmdA, conn)
-                line1 = cmdEx.ExecuteScalar()
-            Case 2
-                cmdEx = New OleDbCommand(cmdB, conn)
-                line1 = cmdEx.ExecuteScalar()
-            Case 3
-                cmdEx = New OleDbCommand(cmdD, conn)
-                line1 = cmdEx.ExecuteScalar
-            Case 5
-                cmdEx = New OleDbCommand(cmdE, conn)
-                line1 = cmdEx.ExecuteScalar()
-                cmdEx = New OleDbCommand(cmdD, conn)
-                line2 = cmdEx.ExecuteScalar()
-                If line2 <> szname And szname <> "noszname" Then
-                    line1 = -1
-                End If
-            Case 6
-                cmdEx = New OleDbCommand(cmdF, conn)
-                line1 = cmdEx.ExecuteScalar()
-        End Select
-        If line1 = "" Then
-            line1 = "-1"
-        End If
-        Return line1
-
+        Try
+            Dim cmdEx As OleDbCommand
+            Dim line1 As String = ""
+            Dim line2 As String = ""
+            name.Replace("'", "''")
+            Dim cmdA As String = "select typeID from 物品列表 where 物品名称='" & name & "'"
+            Dim cmdB As String = "select 星域ID from 星域列表 where 星域名称='" & name & "'"
+            Dim cmdC As String = "select 星座ID from 星座列表 where 星座名称='" & name & "'"
+            Dim cmdD As String = "select 星域名称 from 星系列表 where 星系名称='" & name & "'"
+            Dim cmdE As String = "select 星系ID from 星系列表 where 星系名称='" & name & "'"
+            Dim cmdF As String = "select 物品名称 from 物品列表 where typeID='" & name & "'"
+            conn.Open()
+            Select Case type
+                Case 1
+                    cmdEx = New OleDbCommand(cmdA, conn)
+                    line1 = cmdEx.ExecuteScalar()
+                Case 2
+                    cmdEx = New OleDbCommand(cmdB, conn)
+                    line1 = cmdEx.ExecuteScalar()
+                Case 3
+                    cmdEx = New OleDbCommand(cmdD, conn)
+                    line1 = cmdEx.ExecuteScalar
+                Case 5
+                    cmdEx = New OleDbCommand(cmdE, conn)
+                    line1 = cmdEx.ExecuteScalar()
+                    cmdEx = New OleDbCommand(cmdD, conn)
+                    line2 = cmdEx.ExecuteScalar()
+                    If line2 <> szname And szname <> "noszname" Then
+                        line1 = -1
+                    End If
+                Case 6
+                    cmdEx = New OleDbCommand(cmdF, conn)
+                    line1 = cmdEx.ExecuteScalar()
+            End Select
+            If line1 = "" Then
+                line1 = "-1"
+            End If
+            conn.Close()
+            Return line1
+        Catch ex As Exception
+            conn.close()
+            MessageBox.Show("SQL查询错误！请重试！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return "-1"
+        End Try
     End Function
-
-
-
-
-
 End Module
 

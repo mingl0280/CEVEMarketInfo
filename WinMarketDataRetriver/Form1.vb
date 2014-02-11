@@ -6,6 +6,7 @@ Imports System.Data.Sql
 Imports System.Data.SqlClient
 Imports System.Data.OleDb
 Imports System.Threading
+Imports System.Windows.Forms
 
 Public Class Form1
     Private Structure itemData
@@ -24,56 +25,6 @@ Public Class Form1
 
     Private HeadContent As String = My.Resources.HeadContent
 
-    Public Sub InitData()
-        Me.Invoke(New OneStrParamDeleg(AddressOf WndE), "hide")
-        Dim conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
-        Dim GetItemList As OleDbCommand = New OleDbCommand("select 物品名称 from 物品列表 order by 物品名称", conn)
-        Dim GetItemDescription As OleDbCommand = New OleDbCommand("select 描述 from 物品列表 order by 物品名称", conn)
-        Dim GetItemListCount As OleDbCommand = New OleDbCommand("select count(*) from 物品列表", conn)
-        Dim szList(), DescList() As String
-        Dim listtable As DataTable = New DataTable()
-        Dim desctable As DataTable = New DataTable
-        Dim rder As OleDbDataAdapter = New OleDbDataAdapter(GetItemList)
-        Dim desc As OleDbDataAdapter = New OleDbDataAdapter(GetItemDescription)
-        Dim lines As Integer
-        Dim xi As Integer = 0
-        conn.Open()
-        lines = GetItemListCount.ExecuteScalar()
-        rder.Fill(listtable)
-        desc.Fill(desctable)
-        ReDim szList(lines)
-        ReDim DescList(lines)
-        ReDim itemDataArray(lines)
-        For i As Integer = 0 To lines - 1
-            szList(i) = listtable(i)(0).ToString
-            DescList(i) = desctable(i)(0).ToString
-            DescList(i).Replace(vbCrLf, "<br />")
-            DescList(i).Replace(vbCr, "<br />")
-            DescList(i).Replace(vbLf, "<br />")
-            itemDataArray(i).itemName = szList(i)
-            itemDataArray(i).description = DescList(i)
-
-            Me.Invoke(New OneStrParamDeleg(AddressOf AddComboboxItem), szList(i))
-        Next
-        SplashScreen.Hide()
-        Me.Invoke(New OneStrParamDeleg(AddressOf WndE), "show")
-    End Sub
-
-    Public Sub AddComboboxItem(ByRef x As String)
-        ComboBox1.Items.Add(x)
-    End Sub
-
-    Private Sub WndE(ByRef t As String)
-        Select Case t
-            Case "show"
-                Me.Enabled = True
-                SplashScreen.Hide()
-            Case "hide"
-                Me.Enabled = False
-                SplashScreen.Show()
-        End Select
-    End Sub
-
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         'Me.Hide()
         'Button_GoQuery.Enabled = False
@@ -88,6 +39,7 @@ Public Class Form1
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        PlaceSelection.StartPosition = FormStartPosition.CenterParent
         PlaceSelection.Show()
     End Sub
 
@@ -99,18 +51,22 @@ Public Class Form1
         If ComboBox1.Text = "" Then Exit Sub
         chkA = checkvalue(ComboBox1.Text, 1)
         If chkA = "-1" Then
-            MsgBox("查无此物")
-            ComboBox1.Text = ""
-            Exit Sub
+            If TrialQuery() Then
+                Dim dlgResult As DialogResult = FuzzyQuery.ShowDialog
+                If dlgResult = DialogResult.None Or dlgResult = Windows.Forms.DialogResult.Cancel Then
+                    Exit Sub
+                Else
+                    ComboBox1.Text = SplitFuzzyQueryResult(FZRetstr)(1)
+                    ComboBox1.SelectedItem = ComboBox1.Text
+                    NormalQuery()
+                End If
+            Else
+                MsgBox("查无此物")
+                ComboBox1.Text = ""
+                Exit Sub
+            End If
         Else
-            Dim t As Thread = New Thread(AddressOf Query)
-            itm = ComboBox1.Text
-            t.Start()
-            ComboBox1.Enabled = False
-            'Button1.Enabled = False
-            Button2.Enabled = False
-            GroupBox1.Enabled = False
-            Label4.Visible = True
+            NormalQuery()
         End If
     End Sub
 
@@ -123,7 +79,6 @@ Public Class Form1
     End Sub
 
     Private Sub Query()
-
         isk = GetValue(chkA, st)
         Dim repl, tm As String
         tm = Date.Now.ToLongDateString & Date.Now.ToLongTimeString
@@ -251,7 +206,98 @@ Public Class Form1
             End If
         End If
     End Sub
+
     Private Function findItemIndex(ByVal s As String)
         Return checkvalue(s, 6)
     End Function
+
+    Public Sub InitData()
+        Me.Invoke(New OneStrParamDeleg(AddressOf WndE), "hide")
+        Dim conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
+        Dim GetItemList As OleDbCommand = New OleDbCommand("select 物品名称 from 物品列表 order by 物品名称", conn)
+        Dim GetItemDescription As OleDbCommand = New OleDbCommand("select 描述 from 物品列表 order by 物品名称", conn)
+        Dim GetItemListCount As OleDbCommand = New OleDbCommand("select count(*) from 物品列表", conn)
+        Dim szList(), DescList() As String
+        Dim listtable As DataTable = New DataTable()
+        Dim desctable As DataTable = New DataTable
+        Dim rder As OleDbDataAdapter = New OleDbDataAdapter(GetItemList)
+        Dim desc As OleDbDataAdapter = New OleDbDataAdapter(GetItemDescription)
+        Dim lines As Integer
+        Dim xi As Integer = 0
+        conn.Open()
+        lines = GetItemListCount.ExecuteScalar()
+        rder.Fill(listtable)
+        desc.Fill(desctable)
+        ReDim szList(lines)
+        ReDim DescList(lines)
+        ReDim itemDataArray(lines)
+        For i As Integer = 0 To lines - 1
+            szList(i) = listtable(i)(0).ToString
+            DescList(i) = desctable(i)(0).ToString
+            DescList(i).Replace(vbCrLf, "<br />")
+            DescList(i).Replace(vbCr, "<br />")
+            DescList(i).Replace(vbLf, "<br />")
+            itemDataArray(i).itemName = szList(i)
+            itemDataArray(i).description = DescList(i)
+            Me.Invoke(New OneStrParamDeleg(AddressOf AddComboboxItem), szList(i))
+        Next
+        SplashScreen.Hide()
+        Me.Invoke(New OneStrParamDeleg(AddressOf WndE), "show")
+    End Sub
+
+    Public Sub AddComboboxItem(ByRef x As String)
+        ComboBox1.Items.Add(x)
+    End Sub
+
+    Private Sub WndE(ByRef t As String)
+        Select Case t
+            Case "show"
+                Me.Enabled = True
+                SplashScreen.Hide()
+            Case "hide"
+                Me.Enabled = False
+                SplashScreen.Show()
+        End Select
+    End Sub
+
+    Public Function TrialQuery() As Boolean
+        Dim conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
+        Dim QueryStr As OleDbCommand = New OleDbCommand("select count(*) from 物品列表 where 物品名称 like '%" + ComboBox1.Text + "%'", conn)
+        conn.Open()
+        Try
+            Dim count As Integer = QueryStr.ExecuteScalar
+            If count > 0 Then
+                Return True
+            End If
+        Catch ex As Exception
+            'MessageBox.Show("SQL查询错误！请重试！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            conn.Close()
+        End Try
+        Return False
+    End Function
+
+    Private Sub NormalQuery()
+        Dim t As Thread = New Thread(AddressOf Query)
+        itm = ComboBox1.Text
+        t.Start()
+        ComboBox1.Enabled = False
+        'Button1.Enabled = False
+        Button2.Enabled = False
+        GroupBox1.Enabled = False
+        Label4.Visible = True
+    End Sub
+
+    Private Function SplitFuzzyQueryResult(ByVal bstr As String) As String()
+        Dim retArray() As String
+        retArray = bstr.Split("|")
+        Return retArray
+    End Function
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Label2.Text = "未选择地点默认全部星域!"
+        syst = ""
+        sz = ""
+        szname = ""
+        spstname = ""
+    End Sub
 End Class

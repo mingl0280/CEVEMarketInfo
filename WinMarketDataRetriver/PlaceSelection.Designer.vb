@@ -120,7 +120,7 @@ Partial Class PlaceSelection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(289, 97)
+        Me.ClientSize = New System.Drawing.Size(289, 96)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label1)
@@ -132,6 +132,8 @@ Partial Class PlaceSelection
         Me.Controls.Add(Me.Button3)
         Me.MaximumSize = New System.Drawing.Size(516, 135)
         Me.Name = "PlaceSelection"
+        Me.ShowInTaskbar = False
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "地点选择"
         Me.ResumeLayout(False)
         Me.PerformLayout()

@@ -46,6 +46,7 @@ Partial Class Form1
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.WebBrowser1 = New System.Windows.Forms.WebBrowser()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -106,7 +107,7 @@ Partial Class Form1
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(143, 55)
+        Me.Button2.Location = New System.Drawing.Point(118, 55)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(75, 23)
         Me.Button2.TabIndex = 6
@@ -124,7 +125,7 @@ Partial Class Form1
         '
         'Button_ClearLog
         '
-        Me.Button_ClearLog.Location = New System.Drawing.Point(143, 99)
+        Me.Button_ClearLog.Location = New System.Drawing.Point(118, 104)
         Me.Button_ClearLog.Name = "Button_ClearLog"
         Me.Button_ClearLog.Size = New System.Drawing.Size(75, 23)
         Me.Button_ClearLog.TabIndex = 7
@@ -134,7 +135,7 @@ Partial Class Form1
         'LinkLabel1
         '
         Me.LinkLabel1.AutoSize = True
-        Me.LinkLabel1.Location = New System.Drawing.Point(224, 104)
+        Me.LinkLabel1.Location = New System.Drawing.Point(199, 110)
         Me.LinkLabel1.Name = "LinkLabel1"
         Me.LinkLabel1.Size = New System.Drawing.Size(185, 12)
         Me.LinkLabel1.TabIndex = 8
@@ -148,7 +149,7 @@ Partial Class Form1
         Me.GroupBox1.Controls.Add(Me.RadioButton_Buy)
         Me.GroupBox1.Location = New System.Drawing.Point(15, 50)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(122, 78)
+        Me.GroupBox1.Size = New System.Drawing.Size(97, 78)
         Me.GroupBox1.TabIndex = 3
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "买入/卖出选择"
@@ -212,7 +213,7 @@ Partial Class Form1
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("宋体", 9.0!)
         Me.Label2.ForeColor = System.Drawing.Color.Red
-        Me.Label2.Location = New System.Drawing.Point(143, 84)
+        Me.Label2.Location = New System.Drawing.Point(118, 85)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(143, 12)
         Me.Label2.TabIndex = 15
@@ -222,7 +223,7 @@ Partial Class Form1
         '
         Me.Label5.AutoSize = True
         Me.Label5.ForeColor = System.Drawing.Color.Red
-        Me.Label5.Location = New System.Drawing.Point(224, 60)
+        Me.Label5.Location = New System.Drawing.Point(282, 60)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(173, 12)
         Me.Label5.TabIndex = 16
@@ -253,22 +254,32 @@ Partial Class Form1
         Me.WebBrowser1.Size = New System.Drawing.Size(307, 110)
         Me.WebBrowser1.TabIndex = 9
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(199, 55)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 20
+        Me.Button1.Text = "清除选择"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(782, 351)
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.Button_GoQuery)
+        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button_ClearLog)
         Me.Controls.Add(Me.LinkLabel1)
+        Me.Controls.Add(Me.Button_GoQuery)
         Me.Controls.Add(Me.WebBrowser1)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.GroupBox1)
-        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.ListBox1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label1)
@@ -308,5 +319,6 @@ Partial Class Form1
     Friend WithEvents 全部复制ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents WebBrowser1 As System.Windows.Forms.WebBrowser
+    Friend WithEvents Button1 As System.Windows.Forms.Button
 
 End Class
