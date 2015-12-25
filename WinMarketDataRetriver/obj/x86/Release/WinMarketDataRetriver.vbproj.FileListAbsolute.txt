@@ -22,3 +22,16 @@ E:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\Win
 E:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.vbproj.GenerateResource.Cache
 E:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.SplashScreen.resources
 E:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.FuzzyQuery.resources
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\bin\Release\WinMarketDataRetriver.exe.config
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.exe
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.xml
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.pdb
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.FuzzyQuery.resources
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.Form1.resources
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.Resources.resources
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.PlaceSelection.resources
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.SplashScreen.resources
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.vbproj.GenerateResource.Cache
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\bin\Release\WinMarketDataRetriver.exe
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\bin\Release\WinMarketDataRetriver.pdb
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\bin\Release\WinMarketDataRetriver.xml

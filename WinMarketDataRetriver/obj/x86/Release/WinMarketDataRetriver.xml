@@ -6,7 +6,42 @@ WinMarketDataRetriver
 </name>
 </assembly>
 <members>
-<member name="P:WinMarketDataRetriver.My.Resources.Resources.ResourceManager">
+<member name="M:WinMarketDataRetriver.Form1.itemData.#ctor(System.String,System.String)">
+	<summary>
+ item data
+ </summary>
+	<param name="a">description</param>
+	<param name="b">item Name</param>
+	<remarks></remarks>
+</member><member name="M:WinMarketDataRetriver.DataSaved.#ctor(System.Int32,System.String,System.String,System.Boolean)">
+	<summary>
+ save data structor
+ </summary>
+	<param name="id">Type ID</param>
+	<param name="isk">ISK Get</param>
+	<param name="name">Item Name</param>
+	<param name="PriceType">Price Type, False = Buy, True = Sell</param>
+	<remarks></remarks>
+</member><member name="M:WinMarketDataRetriver.RegionInfo.#ctor(System.String,System.String,System.String,System.String)">
+	<summary>
+ Init new Region info structure
+ </summary>
+	<param name="a">SystemID</param>
+	<param name="b">SystemName</param>
+	<param name="c">RegionID</param>
+	<param name="d">RegionName</param>
+	<remarks></remarks>
+</member><member name="M:WinMarketDataRetriver.funs.GetValue(System.String,System.Int32,System.String,System.String)">
+	<summary>
+ Get the exact value of item.
+ </summary>
+	<param name="valtype">the Type ID</param>
+	<param name="selltype">Buy Or Sell</param>
+	<param name="RegionID">Region ID</param>
+	<param name="SystemID">System ID</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:WinMarketDataRetriver.My.Resources.Resources.ResourceManager">
 	<summary>
   返回此类使用的缓存的 ResourceManager 实例。
 </summary>
@@ -56,6 +91,35 @@ a:hover
 &lt;/head&gt;
 &lt;body&gt;
 &lt;div&gt; 的本地化字符串。
+</summary>
+</member><member name="P:WinMarketDataRetriver.My.Resources.Resources.HeadContentMain">
+	<summary>
+  查找类似 &lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+div
+{ 
+   color:white;
+   font-size:12px;
+}
+body
+{
+   background-color:black;
+}
+a:link , a:visited
+{
+   color:orange;
+   font-weight:bold;
+   text-decoration:underline;
+}
+a:hover
+{
+   color:yellow;
+   font-weight:bold;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt; 的本地化字符串。
 </summary>
 </member><member name="P:WinMarketDataRetriver.My.Resources.Resources.String1">
 	<summary>

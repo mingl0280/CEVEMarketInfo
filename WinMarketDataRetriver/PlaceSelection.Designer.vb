@@ -28,11 +28,10 @@ Partial Class PlaceSelection
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.SuspendLayout()
         '
         'ComboBox1
@@ -71,33 +70,21 @@ Partial Class PlaceSelection
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(45, 60)
+        Me.Button1.Location = New System.Drawing.Point(126, 61)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 6
         Me.Button1.Text = "重填"
         Me.Button1.UseVisualStyleBackColor = True
         '
-        'Button2
-        '
-        Me.Button2.Location = New System.Drawing.Point(126, 60)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 7
-        Me.Button2.Text = "检测"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(207, 60)
+        Me.Button3.Location = New System.Drawing.Point(207, 61)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 8
         Me.Button3.Text = "完成"
         Me.Button3.UseVisualStyleBackColor = True
-        '
-        'Timer1
-        '
         '
         'Label3
         '
@@ -111,13 +98,18 @@ Partial Class PlaceSelection
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(-2, 2)
+        Me.Label4.Location = New System.Drawing.Point(-2, 1)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(284, 95)
+        Me.Label4.Size = New System.Drawing.Size(294, 95)
         Me.Label4.TabIndex = 10
+        '
+        'Timer1
+        '
+        Me.Timer1.Interval = 50
         '
         'PlaceSelection
         '
+        Me.AcceptButton = Me.Button3
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(289, 96)
@@ -128,11 +120,9 @@ Partial Class PlaceSelection
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.ComboBox2)
         Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button3)
         Me.MaximumSize = New System.Drawing.Size(516, 135)
         Me.Name = "PlaceSelection"
-        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "地点选择"
         Me.ResumeLayout(False)
@@ -144,9 +134,8 @@ Partial Class PlaceSelection
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents Button3 As System.Windows.Forms.Button
-    Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents Timer1 As System.Windows.Forms.Timer
 End Class

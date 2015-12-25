@@ -1,0 +1,8 @@
+*.pdb
+*.rar
+*.mdb
+!/WinMarketDataRetriver/Resources/*.jpg
+!/WinMarketDataRetriver/Resources/*.mdb
+*.vshost.*
+*.pdb
+*.cache

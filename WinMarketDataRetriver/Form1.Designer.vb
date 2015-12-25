@@ -23,6 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
@@ -30,6 +31,8 @@ Partial Class Form1
         Me.复制物品名称ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.复制当前ISKToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.全部复制ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.复制选中项名称与ISKToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.复制选中项名称类型与ISKToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button_GoQuery = New System.Windows.Forms.Button()
         Me.Button_ClearLog = New System.Windows.Forms.Button()
@@ -37,8 +40,6 @@ Partial Class Form1
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.RadioButton_Sell = New System.Windows.Forms.RadioButton()
         Me.RadioButton_Buy = New System.Windows.Forms.RadioButton()
-        Me.ShapeContainer1 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
-        Me.LineShape1 = New Microsoft.VisualBasic.PowerPacks.LineShape()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -47,8 +48,13 @@ Partial Class Form1
         Me.Label6 = New System.Windows.Forms.Label()
         Me.WebBrowser1 = New System.Windows.Forms.WebBrowser()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
+        Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.显示ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.退出ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.ContextMenuStrip2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
@@ -62,6 +68,8 @@ Partial Class Form1
         '
         'Label3
         '
+        Me.Label3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(11, 150)
         Me.Label3.Name = "Label3"
@@ -71,6 +79,9 @@ Partial Class Form1
         '
         'ListBox1
         '
+        Me.ListBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListBox1.ContextMenuStrip = Me.ContextMenuStrip1
         Me.ListBox1.FormattingEnabled = True
         Me.ListBox1.HorizontalScrollbar = True
@@ -83,27 +94,39 @@ Partial Class Form1
         '
         'ContextMenuStrip1
         '
-        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.复制物品名称ToolStripMenuItem, Me.复制当前ISKToolStripMenuItem, Me.全部复制ToolStripMenuItem})
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.复制物品名称ToolStripMenuItem, Me.复制当前ISKToolStripMenuItem, Me.全部复制ToolStripMenuItem, Me.复制选中项名称与ISKToolStripMenuItem, Me.复制选中项名称类型与ISKToolStripMenuItem})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(147, 70)
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(228, 114)
         '
         '复制物品名称ToolStripMenuItem
         '
         Me.复制物品名称ToolStripMenuItem.Name = "复制物品名称ToolStripMenuItem"
-        Me.复制物品名称ToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.复制物品名称ToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
         Me.复制物品名称ToolStripMenuItem.Text = "复制物品名称"
         '
         '复制当前ISKToolStripMenuItem
         '
         Me.复制当前ISKToolStripMenuItem.Name = "复制当前ISKToolStripMenuItem"
-        Me.复制当前ISKToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.复制当前ISKToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
         Me.复制当前ISKToolStripMenuItem.Text = "复制当前ISK"
         '
         '全部复制ToolStripMenuItem
         '
         Me.全部复制ToolStripMenuItem.Name = "全部复制ToolStripMenuItem"
-        Me.全部复制ToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.全部复制ToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
         Me.全部复制ToolStripMenuItem.Text = "复制选中项"
+        '
+        '复制选中项名称与ISKToolStripMenuItem
+        '
+        Me.复制选中项名称与ISKToolStripMenuItem.Name = "复制选中项名称与ISKToolStripMenuItem"
+        Me.复制选中项名称与ISKToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
+        Me.复制选中项名称与ISKToolStripMenuItem.Text = "复制选中项名称与ISK"
+        '
+        '复制选中项名称类型与ISKToolStripMenuItem
+        '
+        Me.复制选中项名称类型与ISKToolStripMenuItem.Name = "复制选中项名称类型与ISKToolStripMenuItem"
+        Me.复制选中项名称类型与ISKToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
+        Me.复制选中项名称类型与ISKToolStripMenuItem.Text = "复制选中项名称、类型与ISK"
         '
         'Button2
         '
@@ -176,30 +199,15 @@ Partial Class Form1
         Me.RadioButton_Buy.Text = "买入"
         Me.RadioButton_Buy.UseVisualStyleBackColor = True
         '
-        'ShapeContainer1
-        '
-        Me.ShapeContainer1.Location = New System.Drawing.Point(0, 0)
-        Me.ShapeContainer1.Margin = New System.Windows.Forms.Padding(0)
-        Me.ShapeContainer1.Name = "ShapeContainer1"
-        Me.ShapeContainer1.Shapes.AddRange(New Microsoft.VisualBasic.PowerPacks.Shape() {Me.LineShape1})
-        Me.ShapeContainer1.Size = New System.Drawing.Size(782, 351)
-        Me.ShapeContainer1.TabIndex = 13
-        Me.ShapeContainer1.TabStop = False
-        '
-        'LineShape1
-        '
-        Me.LineShape1.Name = "LineShape1"
-        Me.LineShape1.X1 = 11
-        Me.LineShape1.X2 = 767
-        Me.LineShape1.Y1 = 135
-        Me.LineShape1.Y2 = 135
-        '
         'Timer1
         '
         Me.Timer1.Interval = 1000
         '
         'Label4
         '
+        Me.Label4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("宋体", 40.0!)
         Me.Label4.Location = New System.Drawing.Point(233, 230)
@@ -239,6 +247,7 @@ Partial Class Form1
         '
         'Label6
         '
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(414, 17)
         Me.Label6.Name = "Label6"
@@ -248,6 +257,8 @@ Partial Class Form1
         '
         'WebBrowser1
         '
+        Me.WebBrowser1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.WebBrowser1.Location = New System.Drawing.Point(461, 12)
         Me.WebBrowser1.MinimumSize = New System.Drawing.Size(20, 20)
         Me.WebBrowser1.Name = "WebBrowser1"
@@ -262,6 +273,31 @@ Partial Class Form1
         Me.Button1.TabIndex = 20
         Me.Button1.Text = "清除选择"
         Me.Button1.UseVisualStyleBackColor = True
+        '
+        'NotifyIcon1
+        '
+        Me.NotifyIcon1.ContextMenuStrip = Me.ContextMenuStrip2
+        Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), System.Drawing.Icon)
+        Me.NotifyIcon1.Text = "NotifyTray"
+        Me.NotifyIcon1.Visible = True
+        '
+        'ContextMenuStrip2
+        '
+        Me.ContextMenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.显示ToolStripMenuItem, Me.退出ToolStripMenuItem})
+        Me.ContextMenuStrip2.Name = "ContextMenuStrip2"
+        Me.ContextMenuStrip2.Size = New System.Drawing.Size(153, 70)
+        '
+        '显示ToolStripMenuItem
+        '
+        Me.显示ToolStripMenuItem.Name = "显示ToolStripMenuItem"
+        Me.显示ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.显示ToolStripMenuItem.Text = "显示"
+        '
+        '退出ToolStripMenuItem
+        '
+        Me.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem"
+        Me.退出ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.退出ToolStripMenuItem.Text = "退出"
         '
         'Form1
         '
@@ -283,15 +319,13 @@ Partial Class Form1
         Me.Controls.Add(Me.ListBox1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.ShapeContainer1)
-        Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(798, 390)
         Me.MinimumSize = New System.Drawing.Size(798, 390)
         Me.Name = "Form1"
         Me.Text = "EVE市场查看器"
         Me.ContextMenuStrip1.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.ContextMenuStrip2.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -306,8 +340,6 @@ Partial Class Form1
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents RadioButton_Sell As System.Windows.Forms.RadioButton
     Friend WithEvents RadioButton_Buy As System.Windows.Forms.RadioButton
-    Friend WithEvents ShapeContainer1 As Microsoft.VisualBasic.PowerPacks.ShapeContainer
-    Friend WithEvents LineShape1 As Microsoft.VisualBasic.PowerPacks.LineShape
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
@@ -320,5 +352,11 @@ Partial Class Form1
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents WebBrowser1 As System.Windows.Forms.WebBrowser
     Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents 复制选中项名称与ISKToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents 复制选中项名称类型与ISKToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents NotifyIcon1 As System.Windows.Forms.NotifyIcon
+    Friend WithEvents ContextMenuStrip2 As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents 显示ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents 退出ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

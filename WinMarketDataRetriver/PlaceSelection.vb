@@ -1,95 +1,95 @@
 ﻿Imports System.Data.OleDb
 Imports System.Data.Sql
 Imports System.Data.SqlClient
+Imports System.Threading
 Public Class PlaceSelection
-    Dim err As Integer = 0
-    Private Sub Fillchart()
-        Dim conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
-        Dim cmdsz As OleDbCommand = New OleDbCommand("select 星域名称 from 星域列表 order by 星域名称", conn)
-        Dim cmdspst As OleDbCommand = New OleDbCommand("select 星系名称 from 星系列表 order by 星系名称", conn)
-        Dim cmdGetLines As OleDbCommand = New OleDbCommand("select count(*) from 星域列表", conn)
-        Dim cmdGetLines2 As OleDbCommand = New OleDbCommand("select count(*) from 星系列表", conn)
-        Dim szList(), SpstList() As String
-        Dim listtable As DataTable = New DataTable()
-        Dim rder As OleDbDataAdapter = New OleDbDataAdapter(cmdsz)
-        Dim lines As Integer
-        Dim xi As Integer = 0
-        conn.Open()
-        lines = cmdGetLines.ExecuteScalar
-        rder.Fill(listtable)
-        ReDim szList(lines)
-        For i As Integer = 0 To lines - 1
-            szList(i) = listtable(i)(0)
-            ComboBox1.Items.Add(szList(i))
-        Next
+    'Dim err As Integer = 0
 
-        lines = cmdGetLines2.ExecuteScalar
+    Private Delegate Sub Deleg_change(ByRef c As Boolean)
+    Private Delegate Sub Deleg_add(ByRef BoxID As Integer, ByRef TextValue As String)
+
+    Private Sub Fillchart()
+        Dim cmdspst As OleDbCommand = New OleDbCommand("select SystemID,SystemName,RegionID,RegionName from mapSystemID order by systemName", conn)
+        Dim listtable As DataTable = New DataTable()
+        Dim rder As OleDbDataAdapter = New OleDbDataAdapter()
+        Dim RegionList As New ArrayList()
+        conn.Open()
         listtable = New DataTable()
         rder = New OleDbDataAdapter(cmdspst)
         rder.Fill(listtable)
-        ReDim SpstList(lines)
-        For i As Integer = 0 To lines - 1
-            SpstList(i) = listtable(i)(0)
-            ComboBox2.Items.Add(SpstList(i))
+        SystemList.Clear()
+        SystemList = New Dictionary(Of String, RegionInfo)
+        For i As Integer = 0 To listtable.Rows.Count - 1
+            Dim SysInfoData As New RegionInfo(listtable(i)("SystemID"), listtable(i)("SystemName"), listtable(i)("RegionID"), listtable(i)("RegionName"))
+            SystemList.Add(listtable(i)(1), SysInfoData)
         Next
-        Label3.Visible = False
-        Label4.Visible = False
-    End Sub
-
-
-    Private Sub PlaceSelection_Close(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.FormClosing
-
+        For Each i In SystemList
+            If Not ComboBox1.Items.Contains(i.Value.RegionName) Then
+                Me.Invoke(New Deleg_add(AddressOf AddItemToComboBox), 1, i.Value.RegionName)
+            End If
+            Me.Invoke(New Deleg_add(AddressOf AddItemToComboBox), 2, i.Key)
+        Next
+        Me.Invoke(New Deleg_change(AddressOf ChangeCover), False)
+        conn.Close()
     End Sub
     Private Sub PlaceSelection_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Button3.Enabled = False
+        Dim rnd As New Random()
+        If rnd.Next(0, 10) >= 5 Then sx = 1 Else sx = -1
+        If rnd.Next(0, 10) >= 5 Then sy = 1 Else sy = -1
+        w = Label3.Width
+        h = Label3.Height
+        stepmov = 5
+        Dim th As New Thread(AddressOf Fillchart)
+        th.Start()
         Timer1.Start()
     End Sub
 
-    Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
-        Timer1.Stop()
-        Fillchart()
+    Private Sub ChangeCover(ByRef i As Boolean)
+        If i = False Then
+            Label3.Visible = False
+            Label4.Visible = False
+            Timer1.Stop()
+        Else
+            Label3.Visible = True
+            Label4.Visible = True
+            Timer1.Start()
+        End If
     End Sub
+
+    Private Sub AddItemToComboBox(ByRef BoxID As Integer, ByRef TextValue As String)
+        Select Case BoxID
+            Case 1
+                ComboBox1.Items.Add(TextValue)
+            Case 2
+                ComboBox2.Items.Add(TextValue)
+        End Select
+    End Sub
+
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         ComboBox1.Text = ""
         ComboBox2.Text = ""
     End Sub
 
-    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
-        Dim chk As String = checkvalue(ComboBox1.Text, 2)
-        err = 0
-        If ComboBox1.Text <> "" Then
-            If chk = "-1" Then
-                MsgBox("错误的星域!")
-                ComboBox1.Text = ""
-                err = 1
+    Private Function check() As Boolean
+        If ComboBox1.Text <> "" And ComboBox2.Text <> "" Then
+            Dim GetReg = SystemList(ComboBox2.Text).RegionName
+            If GetReg <> ComboBox1.Text Then
+                Return False
             End If
-            sz = chk
-        Else
-            sz = ""
+        ElseIf ComboBox1.Text = "" And ComboBox2.Text <> "" Then
+            Return True
+        ElseIf ComboBox1.Text = "" And ComboBox2.Text = "" Then
+            Return True
         End If
-        If ComboBox2.Text <> "" Then
-            chk = checkvalue(ComboBox2.Text, 5, ComboBox1.Text)
-            If chk = "-1" Then
-                MsgBox("错误的星系！")
-                ComboBox2.Text = ""
-                err = 2
-            End If
-            syst = chk
-        Else
-            spst = ""
-        End If
-        If (err <> 0) Then
-            Exit Sub
-        End If
-        Button3.Enabled = True
-    End Sub
+        Return True
+    End Function
 
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
         szname = ""
         spstname = ""
-        Button2_Click(sender, e)
-        If err <> 0 Then
+        Dim err As Boolean = check()
+        If err = False Then
             Exit Sub
         End If
 
@@ -107,20 +107,32 @@ Public Class PlaceSelection
                 spstname = ComboBox2.Text
                 Form1.Label2.Text = "已选择：位于 " & ComboBox1.Text & " 星域的 " & ComboBox2.Text & " 星系"
             End If
+            SelectedRegion = SystemList(ComboBox2.Text)
+            Me.DialogResult = Windows.Forms.DialogResult.OK
+        ElseIf ComboBox1.Text = "" And ComboBox2.Text = "" Then
+            SelectedRegion.RegionID = "-1"
+            SelectedRegion.RegionName = ""
+            SelectedRegion.SystemID = "-1"
+            SelectedRegion.SystemName = ""
+            Me.DialogResult = Windows.Forms.DialogResult.Cancel
         End If
         Me.Close()
-        Me.Dispose()
     End Sub
 
-
-    Private Sub ComboBox2_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox2.SelectedIndexChanged
-        Dim ss As String = checkvalue(ComboBox2.Text, 3)
-        If ss = "-1" Then
-            MsgBox("错误的星系")
-        Else
-            ComboBox1.Text = ss
+    Private Sub ComboBox2_LostFocus(sender As Object, e As EventArgs) Handles ComboBox2.LostFocus, ComboBox2.TextChanged, ComboBox2.SelectedIndexChanged, ComboBox2.SelectedValueChanged
+        On Error Resume Next
+        If Not SystemList(ComboBox2.Text).RegionName = ComboBox1.Text Then
+            ComboBox1.Text = SystemList(ComboBox2.Text).RegionName
         End If
     End Sub
 
+    Private sx, sy, w, h, stepmov As Integer
 
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Timer1.Start()
+        If sx + w > Me.Width Or sx <= 1 Then sx = -1 * sx
+        If sy + w > Me.Height Or sy <= 1 Then sy = -1 * sx
+        Label3.Left = Label3.Left + sx * stepmov
+        Label3.Top = Label3.Top + sy * stepmov
+    End Sub
 End Class

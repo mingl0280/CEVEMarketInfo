@@ -3,9 +3,34 @@ Imports System.Drawing
 
 Public NotInheritable Class SplashScreen
     Public Delegate Sub OneIntParamDeleg(ByRef i As Integer)
+    Public Delegate Sub NonParamDeleg()
+    Public Shared MaxC As Integer
+
+    Public Sub SetPBMax(ByRef i As Integer)
+        ProgressBar1.Maximum = i
+    End Sub
+
+    Public Sub SetPBValue(ByRef i As Integer)
+        ProgressBar1.Value = i
+    End Sub
+
+    Public Sub AddOneToProgressBar()
+        ProgressBar1.Value = ProgressBar1.Value + 1
+    End Sub
+
+    Public Shared Function isEnabled() As Boolean
+        Return SplashScreen.IsHandleCreated
+    End Function
+
+    Private Sub HideWindow()
+        Me.Hide()
+    End Sub
+
     Private Sub SplashScreen_Load(sender As Object, e As EventArgs) Handles Me.Load
+
         Randomize()
-        Me.TopMost = True
+        Me.TopMost = False
+        Me.ShowInTaskbar = True
         Dim rnd As Random = New Random
         Dim x As Integer = rnd.Next(1, 4)
         Select Case x
@@ -16,15 +41,23 @@ Public NotInheritable Class SplashScreen
             Case 3
                 PictureBox1.Image = My.Resources._3
         End Select
-        Form1.Show()
+        Timer1.Start()
+        'Form1.Show()
         paintTextOverlay()
+
     End Sub
+
+
     Private Function paintTextOverlay()
         Dim x As SolidBrush = Brushes.White
         Dim ffont As Font = New Font("Arial", 48)
         Dim g As Graphics = Graphics.FromImage(PictureBox1.Image)
         g.DrawString("Initializing...", ffont, x, 128, 0)
         'g.Flush()
-
     End Function
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Me.UpdateZOrder()
+    End Sub
+
 End Class

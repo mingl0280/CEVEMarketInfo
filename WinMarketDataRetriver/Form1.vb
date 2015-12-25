@@ -7,35 +7,70 @@ Imports System.Data.SqlClient
 Imports System.Data.OleDb
 Imports System.Threading
 Imports System.Windows.Forms
+Imports System.IO
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
 
 Public Class Form1
     Private Structure itemData
         Dim description As String
         Dim itemName As String
+
+        ''' <summary>
+        ''' item data
+        ''' </summary>
+        ''' <param name="a">description</param>
+        ''' <param name="b">item Name</param>
+        ''' <remarks></remarks>
+        Public Sub New(ByVal a As String, b As String)
+            description = b
+            itemName = a
+        End Sub
+
     End Structure
 
     Dim chkA, chkB As String
     Dim st, allowsearch, lengthI As Integer
     Dim isk As String
     Private itm As String
-    Private selectdata As DataSaved()
+    Private selectdata As New Dictionary(Of Integer, DataSaved)
+    Private onLoading As Boolean = True
     Public Delegate Sub OneStrParamDeleg(ByRef x As String)
     Public Delegate Sub TwoStrParamDeleg(ByRef StrA As String, ByRef StrB As String)
-    Private itemDataArray() As itemData
-
+    Public Delegate Sub StrStrBolParamDeleg(ByRef A As String, ByRef B As String, ByRef C As Boolean)
+    Private itemDataArray As New List(Of itemData)
+    Private SPS As New SplashScreen
     Private HeadContent As String = My.Resources.HeadContent
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        'Me.Hide()
-        'Button_GoQuery.Enabled = False
+        Me.Visible = False
+        If Not File.Exists(Application.StartupPath + "\eve_db.mdb") Then
+            Dim Fst As Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WinMarketDataRetriver.eve_db.mdb")
+            Dim FF(Fst.Length) As Byte
+            Fst.Read(FF, 0, Fst.Length)
+            Dim ptrMem As IntPtr = Marshal.AllocCoTaskMem(FF.Length)
+            Dim fdataByte(FF.Length) As Byte
+            fdataByte = FF
+            Marshal.Copy(fdataByte, 0, ptrMem, FF.Length)
+            Dim DBFile As New FileStream(Application.StartupPath + "\eve_db.mdb", FileMode.Create)
+            DBFile.Write(fdataByte, 0, Fst.Length)
+            Fst.Close()
+            DBFile.Close()
+        End If
         st = 1
         RadioButton_Buy.Checked = True
         RadioButton_Sell.Checked = False
         Label4.Visible = False
-        SplashScreen.Show()
+        SPS.Show()
         Dim th As Thread = New Thread(AddressOf InitData)
         th.Start()
-        'Me.Enabled = False
+        WebBrowser1.DocumentText = My.Resources.HeadContentMain + _
+            "<div style=""align:center;width:160px;margin-left:auto;margin-right:auto;overflow:none;""> " + _
+            "<div style=""color:yellow;font-size:14px;"">欢迎使用价格查询工具!" + _
+            "</div></div></body></html>"
+        Me.Visible = True
+        onLoading = False
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
@@ -58,6 +93,7 @@ Public Class Form1
                 Else
                     ComboBox1.Text = SplitFuzzyQueryResult(FZRetstr)(1)
                     ComboBox1.SelectedItem = ComboBox1.Text
+                    chkA = checkvalue(ComboBox1.Text, 1)
                     NormalQuery()
                 End If
             Else
@@ -71,56 +107,60 @@ Public Class Form1
     End Sub
 
     Private Sub RadioButton1_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RadioButton_Buy.CheckedChanged
-        st = 1
+        If RadioButton_Buy.Checked = True Then st = 1
     End Sub
 
     Private Sub RadioButton2_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RadioButton_Sell.CheckedChanged
-        st = 2
+        If RadioButton_Sell.Checked = True Then st = 2
     End Sub
 
     Private Sub Query()
-        isk = GetValue(chkA, st)
-        Dim repl, tm As String
-        tm = Date.Now.ToLongDateString & Date.Now.ToLongTimeString
-        repl = "在 " & tm & " 查询了"
-        If szname <> "" Then
-            repl = repl & " " & szname & " 星域"
-        End If
-        If spstname <> "" Then
-            repl = repl & " " & spstname & " 星系"
-        End If
-        repl = repl & " " & itm & "的"
-        If RadioButton_Buy.Checked = True Then
-            repl = repl & "最低卖出价格（最低可购买价格），为"
-        ElseIf RadioButton_Sell.Checked = True Then
-            repl = repl & "最高可卖出价格（最高收购价格），为"
-        End If
-        Dim s As String = Reverse(isk)
-        Dim sx As String = ""
-        sx = s(0) + s(1) + s(2)
-        For i As Integer = 3 To s.Length - 1
-            sx += s(i)
-            Try
-                If (i + 1) Mod 3 = 0 And s(i + 1) <> Nothing Then
-                    sx += ","
-                End If
-            Catch ex As Exception
-            End Try
-        Next
-        isk = Reverse(sx)
-        repl = repl & isk & " ISK"
-        Dim obj(2) As String
-        obj(0) = repl
-        obj(1) = isk
-        Me.Invoke(New TwoStrParamDeleg(AddressOf updateCheckList), repl, isk)
+        Dim BuyOrSell As Boolean = False
+        Try
+            isk = GetValue(chkA, st, SelectedRegion.RegionID, SelectedRegion.SystemID)
+            Dim repl, tm As String
+            tm = Date.Now.ToLongDateString & Date.Now.ToLongTimeString
+            repl = "在 " & tm & " 查询了"
+            If SelectedRegion.RegionName <> "" Then
+                repl = repl & " " & SelectedRegion.RegionName & " 星域"
+            End If
+            If SelectedRegion.SystemName <> "" Then
+                repl = repl & " " & SelectedRegion.SystemName & " 星系"
+            End If
+            repl = repl & " " & itm & "的"
+            If RadioButton_Buy.Checked = True Then
+                repl = repl & "最低卖出价格（卖单最低价），为"
+                BuyOrSell = False
+            ElseIf RadioButton_Sell.Checked = True Then
+                repl = repl & "最高可卖出价格（买单最高价），为"
+                BuyOrSell = True
+            End If
+            Dim s As String = Reverse(isk)
+            Dim sx As String = ""
+            sx = s(0) + s(1) + s(2)
+            For i As Integer = 3 To s.Length - 1
+                sx += s(i)
+                Try
+                    If (i + 1) Mod 3 = 0 And s(i + 1) <> Nothing Then
+                        sx += ","
+                    End If
+                Catch ex As Exception
+                End Try
+            Next
+            isk = Reverse(sx)
+            repl = repl & isk & " ISK"
+            Dim obj(2) As String
+            obj(0) = repl
+            obj(1) = isk
+            Me.Invoke(New StrStrBolParamDeleg(AddressOf updateCheckList), repl, isk, BuyOrSell)
+        Catch ex As Exception
+            MessageBox.Show("Some error has occured: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
-    Private Sub updateCheckList(ByRef ret As String, ByRef isk As String)
-        lengthI = ListBox1.Items.Add(ret) + 1
-        ReDim Preserve selectdata(lengthI)
-        selectdata(lengthI - 1).itemID = lengthI - 1
-        selectdata(lengthI - 1).itemName = ComboBox1.Text
-        selectdata(lengthI - 1).itemISK = isk
+    Private Sub updateCheckList(ByRef ret As String, ByRef isk As String, ByRef BoS As Boolean)
+        lengthI = ListBox1.Items.Add(ret)
+        selectdata.Add(lengthI, New DataSaved(lengthI, isk, ComboBox1.Text, BoS))
         ComboBox1.Enabled = True
         'Button1.Enabled = True
         Button2.Enabled = True
@@ -165,6 +205,30 @@ Public Class Form1
         Clipboard.SetData(DataFormats.Text, p)
     End Sub
 
+    Private Sub 复制选中项名称与ISKToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles 复制选中项名称与ISKToolStripMenuItem.Click
+        Dim selectedi As Integer = 0
+        selectedi = ListBox1.SelectedIndex
+        Clipboard.Clear()
+        Dim p As String = ""
+        Dim x As Integer = 0
+        For Each i In ListBox1.SelectedIndices
+            p += selectdata(CInt(i)).itemName + vbTab + selectdata(CInt(i)).itemISK + vbCrLf
+        Next
+        Clipboard.SetData(DataFormats.Text, p)
+    End Sub
+
+    Private Sub 复制选中项名称类型与ISKToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles 复制选中项名称类型与ISKToolStripMenuItem.Click
+        Dim selectedi As Integer = 0
+        selectedi = ListBox1.SelectedIndex
+        Clipboard.Clear()
+        Dim p As String = ""
+        Dim x As Integer = 0
+        For Each i In ListBox1.SelectedIndices
+            p += selectdata(CInt(i)).itemName + vbTab + If(selectdata(i).itemPriceType = False, "卖单最低价", "买单最高价") + vbTab + selectdata(CInt(i)).itemISK.ToString + vbCrLf
+        Next
+        Clipboard.SetData(DataFormats.Text, p)
+    End Sub
+
     Private Sub ListBox1_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles ListBox1.MouseDown
         If e.Button = Windows.Forms.MouseButtons.Right Then
             Dim ht As Integer = ListBox1.ItemHeight
@@ -188,7 +252,10 @@ Public Class Form1
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        WebBrowser1.DocumentText = HeadContent + itemDataArray(ComboBox1.SelectedIndex).description + "</div></body></html>"
+        Dim derText = itemDataArray(ComboBox1.SelectedIndex).description.Replace("<font size=""14"">", "")
+        derText = derText.Replace("</font>", "")
+        derText.Replace("  ", "<br />")
+        WebBrowser1.DocumentText = HeadContent + derText + "</div></body></html>"
     End Sub
 
     Private Sub WebBrowser1_Navigating(sender As Object, e As WebBrowserNavigatingEventArgs) Handles WebBrowser1.Navigating
@@ -211,38 +278,35 @@ Public Class Form1
         Return checkvalue(s, 6)
     End Function
 
+
+
     Public Sub InitData()
         Me.Invoke(New OneStrParamDeleg(AddressOf WndE), "hide")
-        Dim conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
-        Dim GetItemList As OleDbCommand = New OleDbCommand("select 物品名称 from 物品列表 order by 物品名称", conn)
-        Dim GetItemDescription As OleDbCommand = New OleDbCommand("select 描述 from 物品列表 order by 物品名称", conn)
-        Dim GetItemListCount As OleDbCommand = New OleDbCommand("select count(*) from 物品列表", conn)
-        Dim szList(), DescList() As String
+        Dim GetItemList As OleDbCommand = New OleDbCommand("select itemName,Description from invItems order by itemName", conn)
+        Dim GetItemListCount As OleDbCommand = New OleDbCommand("select count(*) from invItems", conn)
         Dim listtable As DataTable = New DataTable()
-        Dim desctable As DataTable = New DataTable
         Dim rder As OleDbDataAdapter = New OleDbDataAdapter(GetItemList)
-        Dim desc As OleDbDataAdapter = New OleDbDataAdapter(GetItemDescription)
         Dim lines As Integer
         Dim xi As Integer = 0
+        Dim isFirstCreate As Boolean = True
+        Try
+            conn.Close()
+        Catch ex As Exception
+        End Try
         conn.Open()
         lines = GetItemListCount.ExecuteScalar()
+        SPS.Invoke(New SplashScreen.OneIntParamDeleg(AddressOf SPS.SetPBMax), lines)
         rder.Fill(listtable)
-        desc.Fill(desctable)
-        ReDim szList(lines)
-        ReDim DescList(lines)
-        ReDim itemDataArray(lines)
         For i As Integer = 0 To lines - 1
-            szList(i) = listtable(i)(0).ToString
-            DescList(i) = desctable(i)(0).ToString
-            DescList(i).Replace(vbCrLf, "<br />")
-            DescList(i).Replace(vbCr, "<br />")
-            DescList(i).Replace(vbLf, "<br />")
-            itemDataArray(i).itemName = szList(i)
-            itemDataArray(i).description = DescList(i)
-            Me.Invoke(New OneStrParamDeleg(AddressOf AddComboboxItem), szList(i))
+            Dim ItemNameStr = listtable(i)("itemName").ToString
+            Dim ItemDescriptionStr = listtable(i)("Description").ToString.Replace(vbCrLf, "<br />").Replace(vbCr, "<br />").Replace(vbLf, "<br />")
+            itemDataArray.Add(New itemData(ItemNameStr, ItemDescriptionStr))
+            Me.Invoke(New OneStrParamDeleg(AddressOf AddComboboxItem), ItemNameStr)
+            SPS.Invoke(New SplashScreen.NonParamDeleg(AddressOf SPS.AddOneToProgressBar))
         Next
-        SplashScreen.Hide()
+        SPS.Invoke(New SplashScreen.NonParamDeleg(AddressOf SPS.Hide))
         Me.Invoke(New OneStrParamDeleg(AddressOf WndE), "show")
+        conn.Close()
     End Sub
 
     Public Sub AddComboboxItem(ByRef x As String)
@@ -252,27 +316,29 @@ Public Class Form1
     Private Sub WndE(ByRef t As String)
         Select Case t
             Case "show"
-                Me.Enabled = True
-                SplashScreen.Hide()
+                Me.Show()
+                SPS.Hide()
             Case "hide"
-                Me.Enabled = False
-                SplashScreen.Show()
+                Me.Hide()
+                SPS.Show()
         End Select
     End Sub
 
     Public Function TrialQuery() As Boolean
-        Dim conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
-        Dim QueryStr As OleDbCommand = New OleDbCommand("select count(*) from 物品列表 where 物品名称 like '%" + ComboBox1.Text + "%'", conn)
+        Dim QueryStr As OleDbCommand = New OleDbCommand("select count(*) from invItems where itemName like '%" + ComboBox1.Text + "%'", conn)
         conn.Open()
         Try
             Dim count As Integer = QueryStr.ExecuteScalar
             If count > 0 Then
+                conn.Close()
                 Return True
             End If
+
         Catch ex As Exception
             'MessageBox.Show("SQL查询错误！请重试！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error)
             conn.Close()
         End Try
+        conn.Close()
         Return False
     End Function
 
@@ -299,5 +365,37 @@ Public Class Form1
         sz = ""
         szname = ""
         spstname = ""
+    End Sub
+
+
+    Private Sub 退出ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles 退出ToolStripMenuItem.Click
+        Application.Exit()
+    End Sub
+
+    Protected Overrides Sub OnClosing(e As System.ComponentModel.CancelEventArgs)
+        e.Cancel = True
+        Me.WindowState = FormWindowState.Minimized
+    End Sub
+
+    Private Sub Form1_MinimumSizeChanged(sender As Object, e As EventArgs) Handles Me.Resize
+        If onLoading = False Then
+            If Me.WindowState = FormWindowState.Minimized Then
+                Me.Hide()
+            End If
+        End If
+    End Sub
+
+    Private Sub NotifyIcon1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles NotifyIcon1.MouseDoubleClick
+        If Me.WindowState = FormWindowState.Minimized Then
+            Me.Show()
+            Me.WindowState = FormWindowState.Normal
+            Me.BringToFront()
+        Else
+            Me.WindowState = FormWindowState.Minimized
+        End If
+    End Sub
+
+    Private Sub 显示ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles 显示ToolStripMenuItem.Click
+        NotifyIcon1_MouseDoubleClick(sender, New MouseEventArgs(Windows.Forms.MouseButtons.Left, 2, 10, 10, 0))
     End Sub
 End Class

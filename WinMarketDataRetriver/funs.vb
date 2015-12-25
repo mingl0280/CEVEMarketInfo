@@ -14,12 +14,54 @@ Public Structure DataSaved
     Public itemName As String
     Public itemPriceType As Boolean
     Public itemArea As String
+
+    ''' <summary>
+    ''' save data structor
+    ''' </summary>
+    ''' <param name="id">Type ID</param>
+    ''' <param name="isk">ISK Get</param>
+    ''' <param name="name">Item Name</param>
+    ''' <param name="PriceType">Price Type, False = Buy, True = Sell</param>
+    ''' <remarks></remarks>
+    Public Sub New(ByVal id As Integer, isk As String, name As String, PriceType As Boolean)
+        itemID = id
+        itemISK = isk
+        itemName = name
+        itemPriceType = PriceType
+    End Sub
+
+End Structure
+
+Public Structure RegionInfo
+    Public SystemID As String
+    Public SystemName As String
+    Public RegionID As String
+    Public RegionName As String
+
+    ''' <summary>
+    ''' Init new Region info structure
+    ''' </summary>
+    ''' <param name="a">SystemID</param>
+    ''' <param name="b">SystemName</param>
+    ''' <param name="c">RegionID</param>
+    ''' <param name="d">RegionName</param>
+    ''' <remarks></remarks>
+    Public Sub New(a As String, b As String, c As String, d As String)
+        SystemID = a
+        SystemName = b
+        Regionid = c
+        RegionName = d
+    End Sub
 End Structure
 
 Module funs
     Public sz, xz, ss, syst, systname, spst, szname, xzname, ssname, spstname As String
     Public desc As String
     Public FZRetstr As String = ""
+    Public conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
+    Public SystemList As New Dictionary(Of String, RegionInfo)
+    Public SelectedRegion As RegionInfo
+
     Private Function sdlz()
         Return 1
     End Function
@@ -29,82 +71,71 @@ Module funs
     Private Function sdl3z()
         Return 1
     End Function
-    Public Function GetValue(ByVal valtype As String, ByVal selltype As Integer, Optional ByVal szid As String = "-1", Optional ByVal spstid As String = "-1") As String
+    ''' <summary>
+    ''' Get the exact value of item.
+    ''' </summary>
+    ''' <param name="valtype">the Type ID</param>
+    ''' <param name="selltype">Buy Or Sell</param>
+    ''' <param name="RegionID">Region ID</param>
+    ''' <param name="SystemID">System ID</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function GetValue(ByVal valtype As String, _
+                             ByVal selltype As Integer, _
+                             Optional ByVal RegionID As String = "-1", _
+                             Optional ByVal SystemID As String = "-1") As String
         Dim doc As New XmlDocument
         Dim re As XmlNodeReader
-        Dim namenode As String
         Dim nowcount As Integer = 0
-        Dim addr, ntp As String
-        addr = GenerateAddr(valtype, sz)
+        Dim addr As String
+        addr = GenerateAddr(valtype, RegionID, SystemID)
         Try
             doc.Load(addr)
             re = New XmlNodeReader(doc)
         Catch ex As Exception
             MessageBox.Show(ex.Message, ex.Source, MessageBoxButtons.OKCancel, MessageBoxIcon.Error)
         End Try
-
-        ntp = ""
-        namenode = ""
-        Select Case selltype
-            Case 1
-                ntp = "min"
-            Case 2
-                ntp = "max"
-        End Select
         Try
-            While re.Read()
-                Select Case re.NodeType
-                    Case XmlNodeType.Element
-                        namenode = re.Name
-                        If namenode = "buy" Then nowcount = 2
-                        If namenode = "sell" Then nowcount = 1
-                        If namenode = "all" Then nowcount = 3
-                        If namenode = "type" Then addr = re.NodeType
-                    Case XmlNodeType.Text
-                        If namenode = ntp And nowcount = selltype Then
-                            Return re.Value
-                            Exit Try
-                        Else
-                            If namenode = ntp And nowcount <> selltype Then
-                                nowcount = 0
-                            End If
-                        End If
-                End Select
-
-            End While
+            Select Case selltype
+                Case 1
+                    Return doc.SelectSingleNode("/evec_api/marketstat/type/sell/min").InnerText
+                Case 2
+                    Return doc.SelectSingleNode("/evec_api/marketstat/type/buy/max").InnerText
+                Case Else
+                    Throw New Exception()
+            End Select
         Catch ex As Exception
             Return "-1"
             MsgBox(ex.Message)
         End Try
-
     End Function
 
-    Private Function GenerateAddr(ByVal valtype As String, Optional ByVal starzone As String = "-1", Optional ByVal spstid As String = "-1") As String
+    Private Function GenerateAddr(ByVal valtype As String, Optional ByVal RegionID As String = "-1", Optional ByVal SystemID As String = "-1") As String
         Dim netaddr As String = "http://www.ceve-market.org/api/marketstat?typeid="
         netaddr = netaddr & valtype
-        If sz <> "" Then
-            netaddr = netaddr & "&regionlimit=" & starzone
+        If RegionID <> "-1" And RegionID <> "" Then
+            netaddr = netaddr & "&regionlimit=" & RegionID
         End If
-        If syst <> "" Then
-            netaddr = netaddr & "&usesystem=" & syst
+        If SystemID <> "-1" And SystemID <> "" Then
+            netaddr = netaddr & "&usesystem=" & SystemID
         End If
         Return netaddr
     End Function
 
     Public Function checkvalue(ByVal name As String, ByVal type As Integer, Optional ByVal szname As String = "noszname") As String
-        Dim conn As OleDbConnection
-        conn = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
+        If type = 5 Then Throw New Exception()
+        
         Try
             Dim cmdEx As OleDbCommand
             Dim line1 As String = ""
             Dim line2 As String = ""
             name.Replace("'", "''")
-            Dim cmdA As String = "select typeID from 物品列表 where 物品名称='" & name & "'"
-            Dim cmdB As String = "select 星域ID from 星域列表 where 星域名称='" & name & "'"
-            Dim cmdC As String = "select 星座ID from 星座列表 where 星座名称='" & name & "'"
-            Dim cmdD As String = "select 星域名称 from 星系列表 where 星系名称='" & name & "'"
-            Dim cmdE As String = "select 星系ID from 星系列表 where 星系名称='" & name & "'"
-            Dim cmdF As String = "select 物品名称 from 物品列表 where typeID='" & name & "'"
+            Dim cmdA As String = "select typeID from invItems where itemName='" & name & "'"
+            Dim cmdB As String = "select RegionID from mapRegionID where RegionName='" & name & "'"
+            Dim cmdC As String = "select constellationID from mapConstellationID where ConstellationName='" & name & "'"
+            Dim cmdD As String = "select RegionName from mapSystemID where SystemName='" & name & "'"
+            Dim cmdE As String = "select SystemID from mapSystemID where SystemName='" & name & "'"
+            Dim cmdF As String = "select itemName from invItems where typeID='" & name & "'"
             conn.Open()
             Select Case type
                 Case 1
@@ -134,10 +165,11 @@ Module funs
             conn.Close()
             Return line1
         Catch ex As Exception
-            conn.close()
+            conn.Close()
             MessageBox.Show("SQL查询错误！请重试！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return "-1"
         End Try
+        conn.Close()
     End Function
 End Module
 

@@ -146,6 +146,34 @@ a:hover
 &lt;body&gt;
 &lt;div&gt;</value>
   </data>
+  <data name="HeadContentMain" xml:space="preserve">
+    <value>&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+div
+{ 
+   color:white;
+   font-size:12px;
+}
+body
+{
+   background-color:black;
+}
+a:link , a:visited
+{
+   color:orange;
+   font-weight:bold;
+   text-decoration:underline;
+}
+a:hover
+{
+   color:yellow;
+   font-weight:bold;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;</value>
+  </data>
   <data name="String1" xml:space="preserve">
     <value> </value>
   </data>

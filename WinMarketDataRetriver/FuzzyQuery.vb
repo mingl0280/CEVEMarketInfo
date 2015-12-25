@@ -7,9 +7,8 @@ Public Class FuzzyQuery
 
     Private Sub Initial()
         Dim fuzzyqstr As String = Form1.ComboBox1.Text
-        Dim conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
-        Dim FuzzyQuery As OleDbCommand = New OleDbCommand("select 物品名称,typeID from 物品列表 where 物品名称 like '%" + fuzzyqstr + "%'", conn)
-        Dim FuzzyQueryCount As OleDbCommand = New OleDbCommand("select count(*) from 物品列表 where 物品名称 like '%" + fuzzyqstr + "%'", conn)
+        Dim FuzzyQuery As OleDbCommand = New OleDbCommand("select itemName,typeID from invItems where itemName like '%" + fuzzyqstr + "%'", conn)
+        Dim FuzzyQueryCount As OleDbCommand = New OleDbCommand("select count(*) from invItems where itemName like '%" + fuzzyqstr + "%'", conn)
         Dim dtable As DataTable = New DataTable
         Dim oddAdapter As OleDbDataAdapter = New OleDbDataAdapter(FuzzyQuery)
         Dim count As Integer = 0
@@ -22,6 +21,7 @@ Public Class FuzzyQuery
             DataTempSave(i).itemID = dtable(i)(1)
             ComboBox1.Items.Add(DataTempSave(i).itemName)
         Next
+        conn.Close()
     End Sub
 
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
