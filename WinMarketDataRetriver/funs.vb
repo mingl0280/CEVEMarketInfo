@@ -69,7 +69,7 @@ Module funs
     Public desc As String
     Public FZRetstr As String = ""
     Public conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
-    Public SystemList As New Dictionary(Of String, RegionInfo)
+    Public SystemList, RegionList As New Dictionary(Of String, RegionInfo)
     Public SelectedRegion As RegionInfo = New RegionInfo("", "", "", "")
 #End Region
 

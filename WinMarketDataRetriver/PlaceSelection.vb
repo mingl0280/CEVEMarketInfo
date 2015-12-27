@@ -6,6 +6,7 @@ Public Class PlaceSelection
 
 #Region "Private Delegations and Declearations"
     Private Delegate Sub Deleg_change(ByRef c As Boolean)
+    Private Delegate Sub Deleg_SetCurrent(ByRef id As Integer, ByRef i As String)
     Private Delegate Sub Deleg_SetBox(ByRef BoxID As Integer, ByRef Values As List(Of String))
     Private Delegate Sub Deleg_add(ByRef BoxID As Integer, ByRef TextValue As String)
     Private sx, sy, w, h, stepmov As Integer
@@ -29,7 +30,6 @@ Public Class PlaceSelection
         Dim cmdspst As OleDbCommand = New OleDbCommand("select SystemID,SystemName,RegionID,RegionName from mapSystemID order by systemName", conn)
         Dim listtable As DataTable = New DataTable()
         Dim rder As OleDbDataAdapter = New OleDbDataAdapter()
-        Dim RegionList As New ArrayList()
         Dim RGList, SysList As New List(Of String)
         conn.Open()
         listtable = New DataTable()
@@ -39,7 +39,11 @@ Public Class PlaceSelection
         SystemList = New Dictionary(Of String, RegionInfo)
         For i As Integer = 0 To listtable.Rows.Count - 1
             Dim SysInfoData As New RegionInfo(listtable(i)("SystemID"), listtable(i)("SystemName"), listtable(i)("RegionID"), listtable(i)("RegionName"))
-            SystemList.Add(listtable(i)(1), SysInfoData)
+            SystemList.Add(listtable(i)("SystemName"), SysInfoData)
+            Try
+                RegionList.Add(listtable(i)("RegionName"), SysInfoData)
+            Catch ex As Exception
+            End Try
         Next
         For Each i In SystemList
             If Not RGList.Contains(i.Value.RegionName) Then
@@ -52,6 +56,8 @@ Public Class PlaceSelection
         Me.Invoke(New Deleg_change(AddressOf ChangeCover), False)
         Me.Invoke(New Deleg_SetBox(AddressOf SetComboBoxItems), 1, RGList)
         Me.Invoke(New Deleg_SetBox(AddressOf SetComboBoxItems), 2, SysList)
+        Me.Invoke(New Deleg_SetCurrent(AddressOf SetCurrent), 1, SelectedRegion.RegionName)
+        Me.Invoke(New Deleg_SetCurrent(AddressOf SetCurrent), 2, SelectedRegion.SystemName)
         conn.Close()
     End Sub
 
@@ -65,6 +71,17 @@ Public Class PlaceSelection
             Label4.Visible = True
             Timer1.Start()
         End If
+    End Sub
+
+    Private Sub SetCurrent(ByRef BoxID As Integer, ByRef i As String)
+        Select Case BoxID
+            Case 1
+                ComboBox1.SelectedItem = i
+                ComboBox1.Text = i
+            Case 2
+                ComboBox2.SelectedItem = i
+                ComboBox2.Text = i
+        End Select
     End Sub
 
     Private Sub AddItemToComboBox(ByRef BoxID As Integer, ByRef TextValue As String)
@@ -101,20 +118,28 @@ Public Class PlaceSelection
         End If
 
         If ComboBox1.Text <> "" Or ComboBox2.Text <> "" Then
+            SelectedRegion = New RegionInfo("", "", "", "")
             If ComboBox1.Text <> "" And ComboBox2.Text = "" Then
                 Form1.Label2.Text = "已选择：" & ComboBox1.Text & "星域"
                 szname = ComboBox1.Text
+                SelectedRegion.RegionName = ComboBox1.Text
+                SelectedRegion.RegionID = RegionList(ComboBox1.Text).RegionID
             End If
             If ComboBox1.Text = "" And ComboBox2.Text <> "" Then
                 Form1.Label2.Text = "已选择：" & ComboBox2.Text & "星系"
                 spstname = ComboBox2.Text
+                SelectedRegion.SystemID = SystemList(ComboBox2.Text).SystemID
+                SelectedRegion.SystemName = ComboBox2.Text
             End If
             If ComboBox1.Text <> "" And ComboBox2.Text <> "" Then
                 szname = ComboBox1.Text
                 spstname = ComboBox2.Text
+                SelectedRegion.RegionName = ComboBox1.Text
+                SelectedRegion.RegionID = RegionList(ComboBox1.Text).RegionID
+                SelectedRegion.SystemID = SystemList(ComboBox2.Text).SystemID
+                SelectedRegion.SystemName = ComboBox2.Text
                 Form1.Label2.Text = "已选择：位于 " & ComboBox1.Text & " 星域的 " & ComboBox2.Text & " 星系"
             End If
-            SelectedRegion = SystemList(ComboBox2.Text)
             Me.DialogResult = Windows.Forms.DialogResult.OK
         ElseIf ComboBox1.Text = "" And ComboBox2.Text = "" Then
             SelectedRegion.RegionID = "-1"
@@ -147,15 +172,17 @@ Public Class PlaceSelection
     End Sub
 
     Private Function check() As Boolean
+        If ComboBox1.Text = "" And ComboBox2.Text <> "" Then
+            If ComboBox2.Items.Contains(ComboBox2.Text) Then Return True Else Return False
+        End If
+        If ComboBox1.Text <> "" And ComboBox2.Text = "" Then
+            If ComboBox1.Items.Contains(ComboBox1.Text) Then Return True Else Return False
+        End If
         If ComboBox1.Text <> "" And ComboBox2.Text <> "" Then
             Dim GetReg = SystemList(ComboBox2.Text).RegionName
             If GetReg <> ComboBox1.Text Then
                 Return False
             End If
-        ElseIf ComboBox1.Text = "" And ComboBox2.Text <> "" Then
-            Return True
-        ElseIf ComboBox1.Text = "" And ComboBox2.Text = "" Then
-            Return True
         End If
         Return True
     End Function
