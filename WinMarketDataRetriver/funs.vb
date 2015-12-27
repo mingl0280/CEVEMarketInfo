@@ -129,8 +129,11 @@ Module funs
             Dim cmdEx As OleDbCommand
             Dim line1 As String = ""
             Dim line2 As String = ""
-            name.Replace("'", "''")
+            name = name.Replace("'", "''")
             Dim cmdA As String = "select typeID from invItems where itemName='" & name & "'"
+            'Dim cmdA As String = "select typeID from invItems where itemName='@itName'"
+            'Dim cmdAParam As OleDbParameter = New OleDbParameter("@itName", OleDbType.BSTR)
+            'cmdAParam.Value = name
             Dim cmdB As String = "select RegionID from mapRegionID where RegionName='" & name & "'"
             Dim cmdC As String = "select constellationID from mapConstellationID where ConstellationName='" & name & "'"
             Dim cmdD As String = "select RegionName from mapSystemID where SystemName='" & name & "'"
@@ -140,6 +143,8 @@ Module funs
             Select Case type
                 Case 1
                     cmdEx = New OleDbCommand(cmdA, conn)
+                    'cmdEx.Parameters.Add(cmdAParam)
+                    'cmdEx.Prepare()
                     line1 = cmdEx.ExecuteScalar()
                 Case 2
                     cmdEx = New OleDbCommand(cmdB, conn)

@@ -35,3 +35,4 @@ H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\Win
 H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\bin\Release\WinMarketDataRetriver.exe
 H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\bin\Release\WinMarketDataRetriver.pdb
 H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\bin\Release\WinMarketDataRetriver.xml
+H:\VS2010\VB.NET\WinMarketDataRetriver\WinMarketDataRetriver\obj\x86\Release\WinMarketDataRetriver.vbprojResolveAssemblyReference.cache
