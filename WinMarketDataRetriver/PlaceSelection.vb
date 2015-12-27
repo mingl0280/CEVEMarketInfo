@@ -3,10 +3,26 @@ Imports System.Data.Sql
 Imports System.Data.SqlClient
 Imports System.Threading
 Public Class PlaceSelection
-    'Dim err As Integer = 0
 
+#Region "Private Delegations and Declearations"
     Private Delegate Sub Deleg_change(ByRef c As Boolean)
     Private Delegate Sub Deleg_add(ByRef BoxID As Integer, ByRef TextValue As String)
+    Private sx, sy, w, h, stepmov As Integer
+#End Region
+
+#Region "UI Actions"
+#Region "Window load functions and subs"
+    Private Sub PlaceSelection_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Dim rnd As New Random()
+        If rnd.Next(0, 10) >= 5 Then sx = 1 Else sx = -1
+        If rnd.Next(0, 10) >= 5 Then sy = 1 Else sy = -1
+        w = Label3.Width
+        h = Label3.Height
+        stepmov = 5
+        Dim th As New Thread(AddressOf Fillchart)
+        th.Start()
+        Timer1.Start()
+    End Sub
 
     Private Sub Fillchart()
         Dim cmdspst As OleDbCommand = New OleDbCommand("select SystemID,SystemName,RegionID,RegionName from mapSystemID order by systemName", conn)
@@ -32,17 +48,6 @@ Public Class PlaceSelection
         Me.Invoke(New Deleg_change(AddressOf ChangeCover), False)
         conn.Close()
     End Sub
-    Private Sub PlaceSelection_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Dim rnd As New Random()
-        If rnd.Next(0, 10) >= 5 Then sx = 1 Else sx = -1
-        If rnd.Next(0, 10) >= 5 Then sy = 1 Else sy = -1
-        w = Label3.Width
-        h = Label3.Height
-        stepmov = 5
-        Dim th As New Thread(AddressOf Fillchart)
-        th.Start()
-        Timer1.Start()
-    End Sub
 
     Private Sub ChangeCover(ByRef i As Boolean)
         If i = False Then
@@ -64,26 +69,13 @@ Public Class PlaceSelection
                 ComboBox2.Items.Add(TextValue)
         End Select
     End Sub
+#End Region
 
-
+#Region "Buttons Reactions"
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         ComboBox1.Text = ""
         ComboBox2.Text = ""
     End Sub
-
-    Private Function check() As Boolean
-        If ComboBox1.Text <> "" And ComboBox2.Text <> "" Then
-            Dim GetReg = SystemList(ComboBox2.Text).RegionName
-            If GetReg <> ComboBox1.Text Then
-                Return False
-            End If
-        ElseIf ComboBox1.Text = "" And ComboBox2.Text <> "" Then
-            Return True
-        ElseIf ComboBox1.Text = "" And ComboBox2.Text = "" Then
-            Return True
-        End If
-        Return True
-    End Function
 
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
         szname = ""
@@ -118,16 +110,9 @@ Public Class PlaceSelection
         End If
         Me.Close()
     End Sub
+#End Region
 
-    Private Sub ComboBox2_LostFocus(sender As Object, e As EventArgs) Handles ComboBox2.LostFocus, ComboBox2.TextChanged, ComboBox2.SelectedIndexChanged, ComboBox2.SelectedValueChanged
-        On Error Resume Next
-        If Not SystemList(ComboBox2.Text).RegionName = ComboBox1.Text Then
-            ComboBox1.Text = SystemList(ComboBox2.Text).RegionName
-        End If
-    End Sub
-
-    Private sx, sy, w, h, stepmov As Integer
-
+#Region "Animate"
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Timer1.Start()
         If sx + w > Me.Width Or sx <= 1 Then sx = -1 * sx
@@ -135,4 +120,30 @@ Public Class PlaceSelection
         Label3.Left = Label3.Left + sx * stepmov
         Label3.Top = Label3.Top + sy * stepmov
     End Sub
+#End Region
+#End Region
+
+#Region "Location Validation Operations"
+    Private Sub ComboBox2_LostFocus(sender As Object, e As EventArgs) Handles ComboBox2.LostFocus, ComboBox2.TextChanged, ComboBox2.SelectedIndexChanged, ComboBox2.SelectedValueChanged
+        On Error Resume Next
+        If Not SystemList(ComboBox2.Text).RegionName = ComboBox1.Text Then
+            ComboBox1.Text = SystemList(ComboBox2.Text).RegionName
+        End If
+    End Sub
+
+    Private Function check() As Boolean
+        If ComboBox1.Text <> "" And ComboBox2.Text <> "" Then
+            Dim GetReg = SystemList(ComboBox2.Text).RegionName
+            If GetReg <> ComboBox1.Text Then
+                Return False
+            End If
+        ElseIf ComboBox1.Text = "" And ComboBox2.Text <> "" Then
+            Return True
+        ElseIf ComboBox1.Text = "" And ComboBox2.Text = "" Then
+            Return True
+        End If
+        Return True
+    End Function
+#End Region
+
 End Class

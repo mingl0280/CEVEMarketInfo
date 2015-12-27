@@ -28,11 +28,7 @@ Partial Class Form1
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.复制物品名称ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.复制当前ISKToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.全部复制ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.复制选中项名称与ISKToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.复制选中项名称类型与ISKToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button_GoQuery = New System.Windows.Forms.Button()
         Me.Button_ClearLog = New System.Windows.Forms.Button()
@@ -52,6 +48,14 @@ Partial Class Form1
         Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.显示ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.退出ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.清除ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox6 = New System.Windows.Forms.CheckBox()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.ContextMenuStrip2.SuspendLayout()
@@ -94,39 +98,15 @@ Partial Class Form1
         '
         'ContextMenuStrip1
         '
-        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.复制物品名称ToolStripMenuItem, Me.复制当前ISKToolStripMenuItem, Me.全部复制ToolStripMenuItem, Me.复制选中项名称与ISKToolStripMenuItem, Me.复制选中项名称类型与ISKToolStripMenuItem})
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.全部复制ToolStripMenuItem, Me.清除ToolStripMenuItem})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(228, 114)
-        '
-        '复制物品名称ToolStripMenuItem
-        '
-        Me.复制物品名称ToolStripMenuItem.Name = "复制物品名称ToolStripMenuItem"
-        Me.复制物品名称ToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
-        Me.复制物品名称ToolStripMenuItem.Text = "复制物品名称"
-        '
-        '复制当前ISKToolStripMenuItem
-        '
-        Me.复制当前ISKToolStripMenuItem.Name = "复制当前ISKToolStripMenuItem"
-        Me.复制当前ISKToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
-        Me.复制当前ISKToolStripMenuItem.Text = "复制当前ISK"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(153, 70)
         '
         '全部复制ToolStripMenuItem
         '
         Me.全部复制ToolStripMenuItem.Name = "全部复制ToolStripMenuItem"
-        Me.全部复制ToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
+        Me.全部复制ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.全部复制ToolStripMenuItem.Text = "复制选中项"
-        '
-        '复制选中项名称与ISKToolStripMenuItem
-        '
-        Me.复制选中项名称与ISKToolStripMenuItem.Name = "复制选中项名称与ISKToolStripMenuItem"
-        Me.复制选中项名称与ISKToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
-        Me.复制选中项名称与ISKToolStripMenuItem.Text = "复制选中项名称与ISK"
-        '
-        '复制选中项名称类型与ISKToolStripMenuItem
-        '
-        Me.复制选中项名称类型与ISKToolStripMenuItem.Name = "复制选中项名称类型与ISKToolStripMenuItem"
-        Me.复制选中项名称类型与ISKToolStripMenuItem.Size = New System.Drawing.Size(227, 22)
-        Me.复制选中项名称类型与ISKToolStripMenuItem.Text = "复制选中项名称、类型与ISK"
         '
         'Button2
         '
@@ -285,25 +265,111 @@ Partial Class Form1
         '
         Me.ContextMenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.显示ToolStripMenuItem, Me.退出ToolStripMenuItem})
         Me.ContextMenuStrip2.Name = "ContextMenuStrip2"
-        Me.ContextMenuStrip2.Size = New System.Drawing.Size(153, 70)
+        Me.ContextMenuStrip2.Size = New System.Drawing.Size(101, 48)
         '
         '显示ToolStripMenuItem
         '
         Me.显示ToolStripMenuItem.Name = "显示ToolStripMenuItem"
-        Me.显示ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.显示ToolStripMenuItem.Size = New System.Drawing.Size(100, 22)
         Me.显示ToolStripMenuItem.Text = "显示"
         '
         '退出ToolStripMenuItem
         '
         Me.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem"
-        Me.退出ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.退出ToolStripMenuItem.Size = New System.Drawing.Size(100, 22)
         Me.退出ToolStripMenuItem.Text = "退出"
+        '
+        '清除ToolStripMenuItem
+        '
+        Me.清除ToolStripMenuItem.Name = "清除ToolStripMenuItem"
+        Me.清除ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.清除ToolStripMenuItem.Text = "清除"
+        '
+        'CheckBox1
+        '
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Location = New System.Drawing.Point(183, 142)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(48, 16)
+        Me.CheckBox1.TabIndex = 21
+        Me.CheckBox1.Text = "时间"
+        Me.CheckBox1.UseVisualStyleBackColor = True
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(118, 143)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(65, 12)
+        Me.Label7.TabIndex = 22
+        Me.Label7.Text = "复制设置："
+        '
+        'CheckBox2
+        '
+        Me.CheckBox2.AutoSize = True
+        Me.CheckBox2.Location = New System.Drawing.Point(237, 142)
+        Me.CheckBox2.Name = "CheckBox2"
+        Me.CheckBox2.Size = New System.Drawing.Size(48, 16)
+        Me.CheckBox2.TabIndex = 23
+        Me.CheckBox2.Text = "星域"
+        Me.CheckBox2.UseVisualStyleBackColor = True
+        '
+        'CheckBox3
+        '
+        Me.CheckBox3.AutoSize = True
+        Me.CheckBox3.Location = New System.Drawing.Point(291, 142)
+        Me.CheckBox3.Name = "CheckBox3"
+        Me.CheckBox3.Size = New System.Drawing.Size(48, 16)
+        Me.CheckBox3.TabIndex = 24
+        Me.CheckBox3.Text = "星系"
+        Me.CheckBox3.UseVisualStyleBackColor = True
+        '
+        'CheckBox4
+        '
+        Me.CheckBox4.AutoSize = True
+        Me.CheckBox4.Checked = True
+        Me.CheckBox4.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.CheckBox4.Location = New System.Drawing.Point(345, 142)
+        Me.CheckBox4.Name = "CheckBox4"
+        Me.CheckBox4.Size = New System.Drawing.Size(48, 16)
+        Me.CheckBox4.TabIndex = 25
+        Me.CheckBox4.Text = "名称"
+        Me.CheckBox4.UseVisualStyleBackColor = True
+        '
+        'CheckBox5
+        '
+        Me.CheckBox5.AutoSize = True
+        Me.CheckBox5.Location = New System.Drawing.Point(399, 142)
+        Me.CheckBox5.Name = "CheckBox5"
+        Me.CheckBox5.Size = New System.Drawing.Size(48, 16)
+        Me.CheckBox5.TabIndex = 26
+        Me.CheckBox5.Text = "类型"
+        Me.CheckBox5.UseVisualStyleBackColor = True
+        '
+        'CheckBox6
+        '
+        Me.CheckBox6.AutoSize = True
+        Me.CheckBox6.Checked = True
+        Me.CheckBox6.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.CheckBox6.Location = New System.Drawing.Point(448, 142)
+        Me.CheckBox6.Name = "CheckBox6"
+        Me.CheckBox6.Size = New System.Drawing.Size(42, 16)
+        Me.CheckBox6.TabIndex = 27
+        Me.CheckBox6.Text = "ISK"
+        Me.CheckBox6.UseVisualStyleBackColor = True
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(782, 351)
+        Me.Controls.Add(Me.CheckBox6)
+        Me.Controls.Add(Me.CheckBox5)
+        Me.Controls.Add(Me.CheckBox4)
+        Me.Controls.Add(Me.CheckBox3)
+        Me.Controls.Add(Me.CheckBox2)
+        Me.Controls.Add(Me.Label7)
+        Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label5)
@@ -345,18 +411,22 @@ Partial Class Form1
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents ContextMenuStrip1 As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents 复制物品名称ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents 复制当前ISKToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
     Friend WithEvents 全部复制ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents WebBrowser1 As System.Windows.Forms.WebBrowser
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents 复制选中项名称与ISKToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents 复制选中项名称类型与ISKToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents NotifyIcon1 As System.Windows.Forms.NotifyIcon
     Friend WithEvents ContextMenuStrip2 As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents 显示ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents 退出ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents 清除ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox3 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox5 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox6 As System.Windows.Forms.CheckBox
 
 End Class

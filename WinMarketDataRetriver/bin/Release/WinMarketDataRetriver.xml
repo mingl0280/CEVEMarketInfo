@@ -13,14 +13,23 @@ WinMarketDataRetriver
 	<param name="a">description</param>
 	<param name="b">item Name</param>
 	<remarks></remarks>
-</member><member name="M:WinMarketDataRetriver.DataSaved.#ctor(System.Int32,System.String,System.String,System.Boolean)">
+</member><member name="M:WinMarketDataRetriver.Form1.findItemIndex(System.String)">
+	<summary>
+ Browser and Selections
+ </summary>
+	<param name="s">Item Name</param>
+	<returns>Item Description as full HTML</returns>
+	<remarks></remarks>
+</member><member name="M:WinMarketDataRetriver.DataSaved.#ctor(System.String,System.Int32,System.String,System.String,System.Boolean,WinMarketDataRetriver.RegionInfo)">
 	<summary>
  save data structor
  </summary>
+	<param name="TimeStr">Time to Execute Query</param>
 	<param name="id">Type ID</param>
 	<param name="isk">ISK Get</param>
 	<param name="name">Item Name</param>
 	<param name="PriceType">Price Type, False = Buy, True = Sell</param>
+	<param name="RGInfo">Region of the Query</param>
 	<remarks></remarks>
 </member><member name="M:WinMarketDataRetriver.RegionInfo.#ctor(System.String,System.String,System.String,System.String)">
 	<summary>

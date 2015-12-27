@@ -3,7 +3,19 @@ Imports System.Data.OleDb
 
 Public Class FuzzyQuery
 
+#Region "Private Variables Declearations"
     Private DataTempSave() As DataSaved
+#End Region
+
+#Region "UI Actions"
+
+#Region "Initial Actions"
+
+    Private Sub FuzzyQuery_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ComboBox1.Items.Clear()
+        ComboBox1.Text = ""
+        Initial()
+    End Sub
 
     Private Sub Initial()
         Dim fuzzyqstr As String = Form1.ComboBox1.Text
@@ -23,7 +35,9 @@ Public Class FuzzyQuery
         Next
         conn.Close()
     End Sub
+#End Region
 
+#Region "Other Actions"
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
         Try
             FZRetstr = DataTempSave(ComboBox1.SelectedIndex).itemID.ToString + "|" + DataTempSave(ComboBox1.SelectedIndex).itemName
@@ -46,10 +60,8 @@ Public Class FuzzyQuery
     Private Sub ComboBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ComboBox1.KeyPress
         e.KeyChar = Nothing
     End Sub
+#End Region
 
-    Private Sub FuzzyQuery_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ComboBox1.Items.Clear()
-        ComboBox1.Text = ""
-        Initial()
-    End Sub
+#End Region
+
 End Class

@@ -8,26 +8,32 @@ Imports System.Data.OleDb
 Imports System.Data.Sql
 Imports System.Data.SqlClient
 
+#Region "Universal Data Structures"
 Public Structure DataSaved
+    Public QueryTime As String
     Public itemID As Integer
     Public itemISK As String
     Public itemName As String
     Public itemPriceType As Boolean
-    Public itemArea As String
+    Public QueryRegion As RegionInfo
 
     ''' <summary>
     ''' save data structor
     ''' </summary>
+    ''' <param name="TimeStr">Time to Execute Query</param>
     ''' <param name="id">Type ID</param>
     ''' <param name="isk">ISK Get</param>
     ''' <param name="name">Item Name</param>
     ''' <param name="PriceType">Price Type, False = Buy, True = Sell</param>
+    ''' <param name="RGInfo">Region of the Query</param>
     ''' <remarks></remarks>
-    Public Sub New(ByVal id As Integer, isk As String, name As String, PriceType As Boolean)
+    Public Sub New(ByVal TimeStr As String, ByVal id As Integer, isk As String, name As String, PriceType As Boolean, RGInfo As RegionInfo)
+        QueryTime = TimeStr
         itemID = id
         itemISK = isk
         itemName = name
         itemPriceType = PriceType
+        QueryRegion = RGInfo
     End Sub
 
 End Structure
@@ -49,28 +55,24 @@ Public Structure RegionInfo
     Public Sub New(a As String, b As String, c As String, d As String)
         SystemID = a
         SystemName = b
-        Regionid = c
+        RegionID = c
         RegionName = d
     End Sub
 End Structure
 
+#End Region
 Module funs
+
+#Region "Universal Variables and declearations"
     Public sz, xz, ss, syst, systname, spst, szname, xzname, ssname, spstname As String
     Public desc As String
     Public FZRetstr As String = ""
     Public conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")
     Public SystemList As New Dictionary(Of String, RegionInfo)
-    Public SelectedRegion As RegionInfo
+    Public SelectedRegion As RegionInfo = New RegionInfo("", "", "", "")
+#End Region
 
-    Private Function sdlz()
-        Return 1
-    End Function
-    Private Function sdlz2()
-        Return 1
-    End Function
-    Private Function sdl3z()
-        Return 1
-    End Function
+#Region "Universal Functions"
     ''' <summary>
     ''' Get the exact value of item.
     ''' </summary>
@@ -124,7 +126,7 @@ Module funs
 
     Public Function checkvalue(ByVal name As String, ByVal type As Integer, Optional ByVal szname As String = "noszname") As String
         If type = 5 Then Throw New Exception()
-        
+
         Try
             Dim cmdEx As OleDbCommand
             Dim line1 As String = ""
@@ -176,5 +178,7 @@ Module funs
         End Try
         conn.Close()
     End Function
+#End Region
+
 End Module
 

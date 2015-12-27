@@ -121,7 +121,8 @@ Partial Class PlaceSelection
         Me.Controls.Add(Me.ComboBox2)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Button3)
-        Me.MaximumSize = New System.Drawing.Size(516, 135)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.MaximumSize = New System.Drawing.Size(305, 135)
         Me.Name = "PlaceSelection"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "地点选择"

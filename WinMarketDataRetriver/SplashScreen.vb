@@ -2,10 +2,15 @@
 Imports System.Drawing
 
 Public NotInheritable Class SplashScreen
+
+#Region "Public Delegations and Vars"
     Public Delegate Sub OneIntParamDeleg(ByRef i As Integer)
     Public Delegate Sub NonParamDeleg()
-    Public Shared MaxC As Integer
+#End Region
 
+#Region "UI Operations"
+
+#Region "Progress Bar Operations"
     Public Sub SetPBMax(ByRef i As Integer)
         ProgressBar1.Maximum = i
     End Sub
@@ -17,7 +22,9 @@ Public NotInheritable Class SplashScreen
     Public Sub AddOneToProgressBar()
         ProgressBar1.Value = ProgressBar1.Value + 1
     End Sub
+#End Region
 
+#Region "Other UI Operations and returns"
     Public Shared Function isEnabled() As Boolean
         Return SplashScreen.IsHandleCreated
     End Function
@@ -25,9 +32,10 @@ Public NotInheritable Class SplashScreen
     Private Sub HideWindow()
         Me.Hide()
     End Sub
+#End Region
 
+#Region "UI Loading Operations"
     Private Sub SplashScreen_Load(sender As Object, e As EventArgs) Handles Me.Load
-
         Randomize()
         Me.TopMost = False
         Me.ShowInTaskbar = True
@@ -47,7 +55,6 @@ Public NotInheritable Class SplashScreen
 
     End Sub
 
-
     Private Function paintTextOverlay()
         Dim x As SolidBrush = Brushes.White
         Dim ffont As Font = New Font("Arial", 48)
@@ -59,5 +66,7 @@ Public NotInheritable Class SplashScreen
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Me.UpdateZOrder()
     End Sub
+#End Region
+#End Region
 
 End Class
