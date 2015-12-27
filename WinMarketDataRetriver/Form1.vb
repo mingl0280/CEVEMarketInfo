@@ -33,7 +33,7 @@ Public Class Form1
 
 #End Region
 
-#Region "Global Vars and Delegations"
+#Region "Vars and Delegations"
     Dim chkA, chkB As String
     Dim st, allowsearch, lengthI As Integer
     Dim isk As String
@@ -42,6 +42,7 @@ Public Class Form1
     Private onLoading As Boolean = True
     Public Delegate Sub OneStrParamDeleg(ByRef x As String)
     Public Delegate Sub TwoStrParamDeleg(ByRef StrA As String, ByRef StrB As String)
+    Public Delegate Sub OneLstOfStrDeleg(ByRef CC As List(Of String))
     Public Delegate Sub StrStrBolStrRGIParamDeleg(ByRef A As String, ByRef B As String, ByRef C As Boolean, ByRef D As String, ByRef E As RegionInfo)
     Private itemDataArray As New List(Of itemData)
     Private SPS As New SplashScreen
@@ -88,6 +89,8 @@ Public Class Form1
         Dim listtable As DataTable = New DataTable()
         Dim rder As OleDbDataAdapter = New OleDbDataAdapter(GetItemList)
         Dim lines As Integer
+        Dim ItemNameList As New List(Of String)
+        'Dim sw As New Stopwatch()
         Dim xi As Integer = 0
         Dim isFirstCreate As Boolean = True
         Try
@@ -98,15 +101,19 @@ Public Class Form1
         lines = GetItemListCount.ExecuteScalar()
         SPS.Invoke(New SplashScreen.OneIntParamDeleg(AddressOf SPS.SetPBMax), lines)
         rder.Fill(listtable)
+        'sw.Start()
         For i As Integer = 0 To lines - 1
             Dim ItemNameStr = listtable(i)("itemName").ToString
             Dim ItemDescriptionStr = listtable(i)("Description").ToString.Replace(vbCrLf, "<br />").Replace(vbCr, "<br />").Replace(vbLf, "<br />")
             itemDataArray.Add(New itemData(ItemNameStr, ItemDescriptionStr))
-            Me.Invoke(New OneStrParamDeleg(AddressOf AddComboboxItem), ItemNameStr)
-            SPS.Invoke(New SplashScreen.NonParamDeleg(AddressOf SPS.AddOneToProgressBar))
+            ItemNameList.Add(ItemNameStr)
+            CurrentValue = CurrentValue + 1
         Next
         SPS.Invoke(New SplashScreen.NonParamDeleg(AddressOf SPS.Hide))
         Me.Invoke(New OneStrParamDeleg(AddressOf WndE), "show")
+        Me.Invoke(New OneLstOfStrDeleg(AddressOf SetComboBoxItem), ItemNameList)
+        'sw.Stop()
+        'MsgBox(sw.ElapsedMilliseconds.ToString)
         conn.Close()
     End Sub
 
@@ -120,6 +127,15 @@ Public Class Form1
                 SPS.Show()
         End Select
     End Sub
+
+    Public Sub AddComboboxItem(ByRef x As String)
+        ComboBox1.Items.Add(x)
+    End Sub
+
+    Public Sub SetComboBoxItem(ByRef x As List(Of String))
+        ComboBox1.Items.AddRange(x.ToArray)
+    End Sub
+
 #End Region
 
 #Region "Query Opeartions"
@@ -202,8 +218,6 @@ Public Class Form1
         Return retArray
     End Function
 
-
-
     Private Function Reverse(ByRef s As String)
         Dim t As String = ""
         For i = s.Length - 1 To 0 Step -1
@@ -212,9 +226,6 @@ Public Class Form1
         Return t
     End Function
 
-    Public Sub AddComboboxItem(ByRef x As String)
-        ComboBox1.Items.Add(x)
-    End Sub
 
     Private Sub updateCheckList(ByRef ret As String, ByRef isk As String, ByRef BoS As Boolean, ByRef QT As String, ByRef RG As RegionInfo)
         lengthI = ListBox1.Items.Add(ret)
@@ -256,7 +267,7 @@ Public Class Form1
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
         PlaceSelection.StartPosition = FormStartPosition.CenterParent
-        PlaceSelection.Show()
+        PlaceSelection.ShowDialog()
     End Sub
 
     Private Sub LinkLabel1_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked

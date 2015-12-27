@@ -50,9 +50,8 @@ Public NotInheritable Class SplashScreen
                 PictureBox1.Image = My.Resources._3
         End Select
         Timer1.Start()
-        'Form1.Show()
+        Timer2.Start()
         paintTextOverlay()
-
     End Sub
 
     Private Function paintTextOverlay()
@@ -66,7 +65,13 @@ Public NotInheritable Class SplashScreen
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Me.UpdateZOrder()
     End Sub
+
+    Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
+        Me.ProgressBar1.Value = CurrentValue
+        Timer2.Start()
+    End Sub
 #End Region
 #End Region
+
 
 End Class

@@ -6,6 +6,7 @@ Public Class PlaceSelection
 
 #Region "Private Delegations and Declearations"
     Private Delegate Sub Deleg_change(ByRef c As Boolean)
+    Private Delegate Sub Deleg_SetBox(ByRef BoxID As Integer, ByRef Values As List(Of String))
     Private Delegate Sub Deleg_add(ByRef BoxID As Integer, ByRef TextValue As String)
     Private sx, sy, w, h, stepmov As Integer
 #End Region
@@ -29,6 +30,7 @@ Public Class PlaceSelection
         Dim listtable As DataTable = New DataTable()
         Dim rder As OleDbDataAdapter = New OleDbDataAdapter()
         Dim RegionList As New ArrayList()
+        Dim RGList, SysList As New List(Of String)
         conn.Open()
         listtable = New DataTable()
         rder = New OleDbDataAdapter(cmdspst)
@@ -40,12 +42,16 @@ Public Class PlaceSelection
             SystemList.Add(listtable(i)(1), SysInfoData)
         Next
         For Each i In SystemList
-            If Not ComboBox1.Items.Contains(i.Value.RegionName) Then
-                Me.Invoke(New Deleg_add(AddressOf AddItemToComboBox), 1, i.Value.RegionName)
+            If Not RGList.Contains(i.Value.RegionName) Then
+                RGList.Add(i.Value.RegionName)
+                'Me.Invoke(New Deleg_add(AddressOf AddItemToComboBox), 1, i.Value.RegionName)
             End If
-            Me.Invoke(New Deleg_add(AddressOf AddItemToComboBox), 2, i.Key)
+            'Me.Invoke(New Deleg_add(AddressOf AddItemToComboBox), 2, i.Key)
+            SysList.Add(i.Key)
         Next
         Me.Invoke(New Deleg_change(AddressOf ChangeCover), False)
+        Me.Invoke(New Deleg_SetBox(AddressOf SetComboBoxItems), 1, RGList)
+        Me.Invoke(New Deleg_SetBox(AddressOf SetComboBoxItems), 2, SysList)
         conn.Close()
     End Sub
 
@@ -67,6 +73,15 @@ Public Class PlaceSelection
                 ComboBox1.Items.Add(TextValue)
             Case 2
                 ComboBox2.Items.Add(TextValue)
+        End Select
+    End Sub
+
+    Private Sub SetComboBoxItems(ByRef ID As Integer, ByRef Values As List(Of String))
+        Select Case ID
+            Case 1
+                ComboBox1.Items.AddRange(Values.ToArray)
+            Case 2
+                ComboBox2.Items.AddRange(Values.ToArray)
         End Select
     End Sub
 #End Region

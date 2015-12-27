@@ -65,6 +65,7 @@ Module funs
 
 #Region "Universal Variables and declearations"
     Public sz, xz, ss, syst, systname, spst, szname, xzname, ssname, spstname As String
+    Public CurrentValue As Integer = 0
     Public desc As String
     Public FZRetstr As String = ""
     Public conn As OleDbConnection = New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=eve_db.mdb")

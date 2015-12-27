@@ -26,6 +26,7 @@ Partial Class SplashScreen
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -50,6 +51,10 @@ Partial Class SplashScreen
         Me.ProgressBar1.Size = New System.Drawing.Size(496, 12)
         Me.ProgressBar1.TabIndex = 2
         '
+        'Timer2
+        '
+        Me.Timer2.Interval = 10
+        '
         'SplashScreen
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -71,5 +76,6 @@ Partial Class SplashScreen
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
+    Friend WithEvents Timer2 As System.Windows.Forms.Timer
 
 End Class
